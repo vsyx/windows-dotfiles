@@ -1,0 +1,27 @@
+#!/bin/sh
+
+if ! [[ "$OSTYPE" =~ ^(msys)$ ]]; then
+	exit 0
+fi
+
+function posix_to_win() {
+	# Strip leading slash, substitute backslashes 
+	echo "$@" | sed -e 's/^\///' -e 's/\//\\/g' 
+}
+
+function getDirectorySymbolicLinks() {
+	for f in $(git ls-files); do
+		[[ -L "$f" && -d "$f" ]] && echo $f
+	done
+}
+
+symlinks="$(getDirectorySymbolicLinks)"
+for f in $symlinks; do
+	realpath=$(readlink -f $f)
+	if [ -d "$realpath" ]; then
+		relative_path=$(ls -l "$f" | sed 's/^.* -> //')
+		win_path_symlink=$(posix_to_win $f)
+		win_path_target=$(posix_to_win $relative_path)
+		cmd //c "rmdir $win_path_symlink && mklink /d $win_path_symlink ${win_path_target} " 
+	fi
+done
