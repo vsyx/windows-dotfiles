@@ -22,6 +22,7 @@ for f in $symlinks; do
 		relative_path=$(ls -l "$f" | sed 's/^.* -> //')
 		win_path_symlink=$(posix_to_win $f)
 		win_path_target=$(posix_to_win $relative_path)
-		cmd //c "rmdir $win_path_symlink && mklink /d $win_path_symlink ${win_path_target} " 
+		rm "$f"
+		cmd //c "mklink /d $win_path_symlink ${win_path_target} " > /dev/null
 	fi
 done
