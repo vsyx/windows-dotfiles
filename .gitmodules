@@ -1,0 +1,3 @@
+[submodule "source/linux_dotfiles"]
+	path = source/linux_dotfiles
+	url = https://github.com/vsyx/dotfiles
