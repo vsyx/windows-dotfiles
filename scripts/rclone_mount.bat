@@ -7,9 +7,10 @@ if errorlevel 1 (
 )
 
 SETLOCAL
-set remote=onedrive_venta_rclone
-set remote_dir=rclone_mount
+set remote=main
+set remote_dir=/
 set target_dir=%USERPROFILE%\Sync
+set config_file=%APPDATA%\rclone\rclone.conf
 
 rclone mount %remote%:%remote_dir% %target_dir% ^
 	-v ^
@@ -17,5 +18,6 @@ rclone mount %remote%:%remote_dir% %target_dir% ^
 	--poll-interval 15s ^
 	--vfs-cache-mode full ^
 	--vfs-cache-max-size 1G ^
-	--vfs-cache-max-age 168h
+	--vfs-cache-max-age 168h ^
+    --config %config_file%
 ENDLOCAL
